@@ -62,19 +62,11 @@
             height: 0;
             background-color: rgba(255, 255, 255, 0.8);
             overflow: hidden;
-            transition:
-                height 0.4s cubic-bezier(0.77,0,0.175,1),
-                box-shadow 0.3s,
-                transform 0.4s cubic-bezier(0.77,0,0.175,1);
+            transition: height 0.3s ease;
             z-index: 998;
-            box-shadow: 0 0 0 rgba(0,0,0,0);
-            transform: translateY(-30px); /* 只做Y轴平移，不缩放 */
-            will-change: height, box-shadow, transform;
         }
         .menu.open {
             height: 60%;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-            transform: translateY(0); /* 回到原位 */
         }
     }
     @media only screen and (min-width: 601px) {
@@ -89,19 +81,11 @@
             height: 100%;
             background-color: rgba(255, 255, 255, 0.8);
             overflow: hidden;
-            transition:
-                width 0.4s cubic-bezier(0.77,0,0.175,1),
-                box-shadow 0.3s,
-                transform 0.4s cubic-bezier(0.77,0,0.175,1);
+            transition: width 0.3s ease;
             z-index: 998;
-            box-shadow: 0 0 0 rgba(0,0,0,0);
-            transform: translateX(-30px); /* 只做X轴平移，不缩放 */
-            will-change: width, box-shadow, transform;
         }
         .menu.open {
             width: 300px;
-            box-shadow: 4px 0 24px rgba(0,0,0,0.18);
-            transform: translateX(0);
         }
         .container {
             margin-left: 300px;
