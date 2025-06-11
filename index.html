@@ -138,6 +138,24 @@
     .highlight-group p {
         margin: 0;
     }
+    .rainbow-text {
+        font-weight: bold;
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        font-size: 2.5em;
+        letter-spacing: 2px;
+        /* 去除 text-shadow 模糊效果 */
+        /* text-shadow: 0 2px 8px rgba(0,0,0,0.15); */
+        animation: rainbow-move 1.5s linear infinite;
+        -webkit-animation: rainbow-move 1.5s linear infinite;
+    }
+    @keyframes rainbow-move {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+    }
 </style>
 </head>
 <body>
@@ -159,9 +177,21 @@
         </div>
         </div>
     <div class="entry">
-        <div class="date">2025年05月27日</div>
+        <div class="date">2025年06月11日</div>
+        <div class="update">
+            <p>yxy是个人机</p>
+        </div> 
+    </div>                   
+    <div class="entry">
+        <div class="date">2025年05月29日</div>
         <div class="highlight-group">
-            <p>动物园里买油炸焦糖，可惜的是动物园无🐳</p>
+            <p>yxy打羽毛球被他爹打爆了</p>
+        </div>
+    </div>    
+    <div class="entry">
+        <div class="date">2025年05月27日</div>
+        <div class="update">
+            <p class="rainbow-text">动物园里买油炸焦糖，可惜的是动物园无🐳</p>
         </div>
     </div>
     <div class="entry">
@@ -215,6 +245,35 @@
         var menu = document.getElementById('menu');
         menu.classList.toggle('open');
     }
+
+    // ====== 平滑无缝彩虹渐变文字效果 ======
+    // 生成首尾闭环的HSL渐变色，红到紫再回红
+    function getSeamlessRainbowColors(count) {
+        // count+1，首尾闭环，最后一个色相与第一个一致
+        return Array.from({length: count + 21}, (_, i) => {
+            const hue = (i * (360 / count)) % 360;
+            return `hsl(${hue}, 100%, 50%)`;
+        });
+    }
+
+    // 设置渐变背景到所有 rainbow-text 元素
+    function setSeamlessRainbowGradient() {
+        const colors = getSeamlessRainbowColors(20); // 20段彩虹更平滑
+        const gradient = `linear-gradient(90deg, ${colors.join(',')})`;
+        document.querySelectorAll('.rainbow-text').forEach(el => {
+            el.style.background = gradient;
+            el.style.backgroundSize = '200% 100%';
+            el.style.backgroundRepeat = 'repeat';
+            el.style.webkitBackgroundClip = 'text';
+            el.style.webkitTextFillColor = 'transparent';
+            el.style.backgroundClip = 'text';
+            el.style.color = 'transparent';
+        });
+    }
+
+    // 初始化
+    setSeamlessRainbowGradient();
+    // ====== 平滑无缝彩虹渐变文字效果结束 ======
 </script>
 </body>
 </html>
