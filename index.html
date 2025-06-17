@@ -1,285 +1,445 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>欢迎您</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background: radial-gradient(circle, #99ccff, #f0f0f0);
-        overflow-x: hidden;
-    }
-    .container {
-        max-width: 800px;
-        margin: 20px auto;
-        padding: 20px;
-        background-color: rgba(255, 255, 255, 0.7);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 20px;
-        position: relative;
-    }
-    .menu-toggle {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        cursor: pointer;
-        z-index: 999;
-        display: none;
-    }
-    .menu-toggle span {
-        display: block;
-        width: 30px;
-        height: 4px;
-        background-color: #ccc;
-        border-radius: 2px;
-        margin-bottom: 6px;
-        transition: transform 0.3s ease;
-    }
-    .menu-toggle.open span:nth-child(1) {
-        transform: translateY(6px) rotate(45deg);
-    }
-    .menu-toggle.open span:nth-child(2) {
-        opacity: 0;
-    }
-    .menu-toggle.open span:nth-child(3) {
-        transform: translateY(-6px) rotate(-45deg);
-    }
-    @media only screen and (max-width: 600px) {
-        .container {
-            padding: 20px;
-        }
-        .menu-toggle {
-            display: block;
-        }
-        .menu {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎您</title>
+    <style>
+        /* ====== 进入动画样式 ====== */
+        #splash-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 0;
-            background-color: rgba(255, 255, 255, 0.8);
-            overflow: hidden;
-            transition: height 0.3s ease;
-            z-index: 998;
-        }
-        .menu.open {
-            height: 60%;
-        }
-    }
-    @media only screen and (min-width: 601px) {
-        .menu-toggle {
-            display: block;
-        }
-        .menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
-            overflow: hidden;
-            transition: width 0.3s ease;
-            z-index: 998;
+            background-color: #222;
+            color: #fff;
+            font-weight: 400;
+            font-size: 2vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            text-transform: uppercase;
+            font-family: "Khula", sans-serif;
+            box-sizing: border-box;
+            letter-spacing: 6px;
+            margin: 0;
+            line-height: 1.2;
+            z-index: 1000;
+            transition: opacity 1s ease;
         }
-        .menu.open {
-            width: 300px;
+
+        #splash-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
+
+        .animate-me {
+            margin: 15px 0;
+        }
+
+        span {
+            display: inline-block;
+        }
+        
+        /* ====== 主页样式 ====== */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle, #99ccff, #f0f0f0);
+            overflow-x: hidden;
+        }
+        
+        #main-content {
+            display: none; /* 初始隐藏 */
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        
+        #main-content.visible {
+            display: block;
+            opacity: 1;
+        }
+
         .container {
-            margin-left: 300px;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            position: relative;
         }
-    }
-    .menu-links {
-        padding: 20px;
-    }
-    .menu-links a {
-        display: block;
-        margin-bottom: 10px;
-        color: #333333;
-        text-decoration: none;
-        font-size: 18px;
-    }
-    .entry {
-        margin-bottom: 40px;
-    }
-    .date {
-        font-size: 24px;
-        font-weight: bold;
-        color: #333333;
-        margin-bottom: 20px;
-    }
-    .update {
-        background-color: #ffcc00;
-        padding: 20px;
-        border-radius: 20px;
-        margin-bottom: 30px;
-        color: #333333;
-    }
-    .update p {
-        margin: 0;
-        color: #333333;
-    }
-    .latest {
-        font-weight: bold;
-        color: #ff0000; /* 红色用来表示最新 */
-    }
-    .highlight-group {
-        background: #ffcc00;  /* 统一背景 */
-        border-radius: 20px;
-        padding: 20px;       /* 内边距统一控制 */
-        flex-grow: 1;        /* 自动填充剩余空间 */
-        margin-bottom: 30px;
-        font-weight: bold;
-        color: #ff0000;
-        font-size: 20px;
-    }
-    .highlight-group p {
-        margin: 0;
-    }
-    .rainbow-text {
-        font-weight: bold;
-        background-size: 200% 100%;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        color: transparent;
-        font-size: 2.5em;
-        letter-spacing: 2px;
-        /* 去除 text-shadow 模糊效果 */
-        /* text-shadow: 0 2px 8px rgba(0,0,0,0.15); */
-        animation: rainbow-move 1.5s linear infinite;
-        -webkit-animation: rainbow-move 1.5s linear infinite;
-    }
-    @keyframes rainbow-move {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 100% 50%; }
-    }
-</style>
+
+        .menu-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            z-index: 999;
+            display: none;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 30px;
+            height: 4px;
+            background-color: #ccc;
+            border-radius: 2px;
+            margin-bottom: 6px;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-toggle.open span:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .menu-toggle.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.open span:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .menu {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 0;
+                background-color: rgba(255, 255, 255, 0.8);
+                overflow: hidden;
+                transition: height 0.3s ease;
+                z-index: 998;
+            }
+
+            .menu.open {
+                height: 60%;
+            }
+        }
+
+        @media only screen and (min-width: 601px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .menu {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 0;
+                height: 100%;
+                background-color: rgba(255, 255, 255, 0.8);
+                overflow: hidden;
+                transition: width 0.3s ease;
+                z-index: 998;
+            }
+
+            .menu.open {
+                width: 300px;
+            }
+
+            .container {
+                margin-left: 300px;
+            }
+        }
+
+        .menu-links {
+            padding: 20px;
+        }
+
+        .menu-links a {
+            display: block;
+            margin-bottom: 10px;
+            color: #333333;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .entry {
+            margin-bottom: 40px;
+        }
+
+        .date {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+
+        .update {
+            background-color: #ffcc00;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            color: #333333;
+        }
+
+        .update p {
+            margin: 0;
+            color: #333333;
+        }
+
+        .latest {
+            font-weight: bold;
+            color: #ff0000; /* 红色用来表示最新 */
+        }
+
+        .highlight-group {
+            background: #ffcc00; /* 统一背景 */
+            border-radius: 20px;
+            padding: 20px; /* 内边距统一控制 */
+            flex-grow: 1; /* 自动填充剩余空间 */
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #ff0000;
+            font-size: 20px;
+        }
+
+        .highlight-group p {
+            margin: 0;
+        }
+
+        .rainbow-text {
+            font-weight: bold;
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            font-size: 2.5em;
+            letter-spacing: 2px;
+            animation: rainbow-move 1.5s linear infinite;
+            -webkit-animation: rainbow-move 1.5s linear infinite;
+        }
+
+        @keyframes rainbow-move {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+    </style>
 </head>
 <body>
-<div class="menu-toggle" onclick="toggleMenu()">
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
-<div class="menu" id="menu">
-    <div class="menu-links">
-        <!-- 这里可以添加菜单项 -->
-    </div>
-</div>
-<div class="container">
-    <h1>欢迎您</h1>
-    <div class="intro">
-        <p>我是yxy他爹，这里是yxy的专属网站。</p>
-        <p>很高兴你来到这里。</p>
+    <!-- 进入动画部分 -->
+    <div id="splash-screen">
+        <div>
+            <div class="animate-me">动物园里卖焦糖，但动物园里无鲸</div>
+            <div class="animate-me">动物园里有座山，山上插着一柄剑</div>
+            <div class="animate-me">动物园里卖焦糖，但动物园里无鲸</div>
+            <div class="animate-me">动物园里有座山，山上插着一柄剑</div>
+            <div class="animate-me">动物园里卖焦糖，但动物园里无鲸</div>
+            <div class="animate-me">动物园里有座山，山上插着一柄剑</div>
+            <div class="animate-me">动物园里卖焦糖，但动物园里无鲸</div>
+            <div class="animate-me">动物园里有座山，山上插着一柄剑</div>
+            <div class="animate-me">动物园里卖焦糖，但动物园里无鲸</div>
+            <div class="animate-me">动物园里有座山，山上插着一柄剑</div>
+            <div class="animate-me">动物园里卖焦糖，但动物园里无鲸</div>
+            <div class="animate-me">动物园里有座山，山上插着一柄剑</div>
+            <div class="animate-me">动物园里卖焦糖，但动物园里无鲸</div>
+            <div class="animate-me">动物园里有座山，山上插着一柄剑</div>
         </div>
     </div>
-    <div class="entry">
-        <div class="date">2025年06月16日</div>
-        <div class="update">
-            <p class="rainbow-text">13381796402</p>
+    
+    <!-- 主页内容部分 -->
+    <div id="main-content">
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-    </div> 
-    <div class="entry">
-        <div class="date">2025年06月11日</div>
-        <div class="update">
-            <p>yxy是个人机</p>
+        
+        <div class="menu" id="menu">
+            <div class="menu-links">
+                <!-- 这里可以添加菜单项 -->
+            </div>
+        </div>
+        
+        <div class="container">
+            <h1>欢迎您</h1>
+            <div class="intro">
+                <p>我是yxy他爹，这里是yxy的专属网站。</p>
+                <p>很高兴你来到这里。</p>
+            </div>
+        </div>
+        
+        <div class="entry">
+            <div class="date">2025年06月16日</div>
+            <div class="update">
+                <p class="rainbow-text">13381796402</p>
+            </div>
+        </div>
+        
+        <div class="entry">
+            <div class="date">2025年06月11日</div>
+            <div class="update">
+                <p>yxy是个人机</p>
+            </div>
+        </div>
+        
+        <div class="entry">
+            <div class="date">2025年05月29日</div>
+            <div class="highlight-group">
+                <p>yxy打羽毛球被他爹打爆了</p>
+            </div>
+        </div>
+        
+        <div class="entry">
+            <div class="date">2025年05月27日</div>
+            <div class="update">
+                <p class="rainbow-text">动物园里买油炸焦糖，可惜的是动物园无🐳</p>
+            </div>
+        </div>
+        
+        <div class="entry">
+            <div class="date">2025年05月22-23日</div>
+            <div class="update">
+                <p>yxy在物理考试中第6题答错，第12题0分，第18题0分。最终一泻千里狂砍57分（画图题还错了哦）,dxm的59分同样令人惋惜</p>
+                <p>yxy在数学考试中选择，填空各错两道，23题证明题更是0分！！！（陈zf应该很高兴吧）</p>
+                <p>yxy的好友xy最近疑似贩糖，频繁坑人（实则是自己没实力......）yxy对其大肆嘲讽</p>
+            </div>
+        </div>
+        
+        <div class="entry">
+            <div class="date">2025年05月18日</div>
+            <div class="update">
+                <p>yxy在听说测试模拟中使用f开头词语，狂砍10分（10的中间忘打了一个点）</p>
+                <p>yxy的劲敌dxm在听说测试时准考证差点落在大巴上，yxy对其大加嘲讽</p>
+            </div>
+        </div>
+        
+        <div class="entry">
+            <div class="date">2025年05月17日</div>
+            <div class="update">
+                <p>yxy在理化操作实验考中，平衡螺母没调</p>
+            </div>
+        </div>
+        
+        <div class="entry">
+            <div class="date">2025年05月15日</div>
+            <div class="update">
+                <p>yxy今天正式挑战dxm，首战即败</p>
+            </div>
+        </div>
+        
+        <div class="entry">
+            <div class="date">2024年02月23日</div>
+            <div class="update">
+                <p>热心同志徐某某：内格yxy被林肯解放</p>
+            </div>
+        </div>
+        
+        <div class="entry">
+            <div class="date">2024年02月22日</div>
+            <div class="update">
+                <p>为了表示对yxy同志的尊敬与赞美，我于2024年02月22日在此表示我对yxy这个**的极高赞美（简直高的过分）</p>
+            </div>
+        </div>
+        
+        <div class="entry">
+            <div class="date">2023年11月26日</div>
+            <div class="update">
+                <p>yxy期末拉爆徐某某！</p>
+            </div>
         </div>
     </div>
-    <div class="entry">
-        <div class="date">2025年05月29日</div>
-        <div class="highlight-group">
-            <p>yxy打羽毛球被他爹打爆了</p>
-        </div>
-    </div>    
-    <div class="entry">
-        <div class="date">2025年05月27日</div>
-        <div class="update">
-            <p class="rainbow-text">动物园里买油炸焦糖，可惜的是动物园无🐳</p>
-        </div>
-    </div>
-    <div class="entry">
-        <div class="date">2025年05月22-23日</div>
-        <div class="update">
-            <p>yxy在物理考试中第6题答错，第12题0分，第18题0分。最终一泻千里狂砍57分（画图题还错了哦）,dxm的59分同样令人惋惜</p>
-            <p>yxy在数学考试中选择，填空各错两道，23题证明题更是0分！！！（陈zf应该很高兴吧）</p>
-            <p>yxy的好友xy最近疑似贩糖，频繁坑人（实则是自己没实力……）yxy对其大肆嘲讽</p>
-        </div>
-    </div> 
-    <div class="entry">
-        <div class="date">2025年05月18日</div>
-        <div class="update">
-            <p>yxy在听说测试模拟中使用f开头词语，狂砍10分（10的中间忘打了一个点）</p>
-            <p>yxy的劲敌dxm在听说测试时准考证差点落在大巴上，yxy对其大加嘲讽</p>
-        </div>
-    </div>
-    <div class="entry">
-        <div class="date">2025年05月17日</div>
-        <div class="update">           
-            <p>yxy在理化操作实验考中，平衡螺母没调</p>
-        </div>
-    </div>    
-    <div class="entry">
-        <div class="date">2025年05月15日</div>
-        <div class="update">
-            <p>yxy今天正式挑战dxm，首战即败</p>
-        </div>
-    </div>
-    <div class="entry">
-        <div class="date">2024年02月23日</div>
-        <div class="update">
-            <p>热心同志徐某某：内格yxy被林肯解放</p>
-        </div>
-    </div>
-    <div class="entry">
-        <div class="date">2024年02月22日</div>
-        <div class="update">
-            <p>为了表示对yxy同志的尊敬与赞美，我于2024年02月22日在此表示我对yxy这个**的极高赞美（简直高的过分）</p>
-        </div>
-    </div>
-    <div class="entry">
-        <div class="date">2023年11月26日</div>
-        <div class="update">
-            <p>yxy期末拉爆徐某某！</p>
-        </div>
-    </div>
-</div>
-<script>
-    function toggleMenu() {
-        var menu = document.getElementById('menu');
-        menu.classList.toggle('open');
-    }
 
-    // ====== 平滑无缝彩虹渐变文字效果 ======
-    // 生成首尾闭环的HSL渐变色，红到紫再回红
-    function getSeamlessRainbowColors(count) {
-        // count+1，首尾闭环，最后一个色相与第一个一致
-        return Array.from({length: count + 21}, (_, i) => {
-            const hue = (i * (360 / count)) % 360;
-            return `hsl(${hue}, 100%, 50%)`;
+    <!-- 引入动画库 -->
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+    
+    <script type="module">
+        // 动态加载Letterize库
+        import("https://cdn.skypack.dev/letterizejs@2.0.0").then(module => {
+            const Letterize = module.default;
+            
+            const test = new Letterize({
+                targets: ".animate-me"
+            });
+
+            const animation = anime.timeline({
+                targets: test.listAll,
+                delay: anime.stagger(100, {
+                    grid: [test.list[0].length, test.list.length],
+                    from: "center"
+                }),
+                loop: true
+            });
+
+            animation
+                .add({
+                    scale: 0.5
+                })
+                .add({
+                    letterSpacing: "10px"
+                })
+                .add({
+                    scale: 1
+                })
+                .add({
+                    letterSpacing: "6px"
+                });
+            
+            // 设置动画显示时间（5秒后显示主页）
+            setTimeout(() => {
+                document.getElementById('splash-screen').classList.add('hidden');
+                document.getElementById('main-content').classList.add('visible');
+            }, 5000);
         });
-    }
+    </script>
+    
+    <script>
+        // 菜单切换功能
+        function toggleMenu() {
+            var menu = document.getElementById('menu');
+            menu.classList.toggle('open');
+        }
+        
+        // 平滑无缝彩虹渐变文字效果
+        function getSeamlessRainbowColors(count) {
+            return Array.from({length: count + 21}, (_, i) => {
+                const hue = (i * (360 / count)) % 360;
+                return `hsl(${hue}, 100%, 50%)`;
+            });
+        }
 
-    // 设置渐变背景到所有 rainbow-text 元素
-    function setSeamlessRainbowGradient() {
-        const colors = getSeamlessRainbowColors(20); // 20段彩虹更平滑
-        const gradient = `linear-gradient(90deg, ${colors.join(',')})`;
-        document.querySelectorAll('.rainbow-text').forEach(el => {
-            el.style.background = gradient;
-            el.style.backgroundSize = '200% 100%';
-            el.style.backgroundRepeat = 'repeat';
-            el.style.webkitBackgroundClip = 'text';
-            el.style.webkitTextFillColor = 'transparent';
-            el.style.backgroundClip = 'text';
-            el.style.color = 'transparent';
+        function setSeamlessRainbowGradient() {
+            const colors = getSeamlessRainbowColors(20);
+            const gradient = `linear-gradient(90deg, ${colors.join(',')})`;
+            
+            document.querySelectorAll('.rainbow-text').forEach(el => {
+                el.style.background = gradient;
+                el.style.backgroundSize = '200% 100%';
+                el.style.backgroundRepeat = 'repeat';
+                el.style.webkitBackgroundClip = 'text';
+                el.style.webkitTextFillColor = 'transparent';
+                el.style.backgroundClip = 'text';
+                el.style.color = 'transparent';
+            });
+        }
+        
+        // 当主页显示时初始化彩虹文字效果
+        const observer = new MutationObserver((mutations) => {
+            if (document.getElementById('main-content').classList.contains('visible')) {
+                setSeamlessRainbowGradient();
+                observer.disconnect();
+            }
         });
-    }
-
-    // 初始化
-    setSeamlessRainbowGradient();
-    // ====== 平滑无缝彩虹渐变文字效果结束 ======
-</script>
+        
+        observer.observe(document.getElementById('main-content'), {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    </script>
 </body>
 </html>
